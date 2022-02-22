@@ -307,28 +307,6 @@
         "summary": "Make admin",
         "description": "Turn an user into an admin",
         "operationID": "adminUser",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "admin": {
-                    "type": "boolean"
-                  },
-                  "updated_at": {
-                    "type": "date-time"
-                  }
-                },
-                "example": {
-                  "admin": true,
-                  "updated_at": "2022-02-22T01:32:05.291Z"
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful operation",
