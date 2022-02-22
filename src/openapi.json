@@ -1,0 +1,395 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "User Creation API",
+    "description": "An user API with CRUD functionality using SOLID approach.",
+    "contact": {
+      "name": "Bruno Fukumori",
+      "url": "https://github.com/bfukumori",
+      "email": "brunofukumori@gmail.com"
+    },
+    "servers": [
+      {
+        "url": "http://localhost",
+        "description": "The development local server",
+        "port": {
+          "default": "3333"
+        }
+      }
+    ],
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create a user",
+        "description": "Create a new user",
+        "operationID": "createUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "John Doe",
+                  "email": "johndoe@gmail.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User succesfully created!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "admin": {
+                      "type": "boolean"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "example": {
+                    "id": "cad606cf-72a1-42d6-96ea-e1fefa3865a0",
+                    "admin": false,
+                    "name": "John Doe",
+                    "email": "johndoe@gmail.com",
+                    "created_at": "2022-02-22T01:32:05.291Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User already exists!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "error": "User already exists!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "List all users",
+        "description": "Only an <b>admin</b> can list all users",
+        "operationID": "listUsers",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "header",
+            "description": "user id to be passed as header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "admin": {
+                        "type": "boolean"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  },
+                  "example": [
+                    {
+                      "id": "1b62d86b-a7d5-4bd9-95c1-55b812f7ff20",
+                      "admin": false,
+                      "name": "Peter Parker",
+                      "email": "peterparker@gmail.com",
+                      "created_at": "2022-02-22T02:28:00.522Z",
+                      "updated_at": "2022-02-22T02:28:00.522Z"
+                    },
+                    {
+                      "id": "5106e8ac-acb0-4cc1-a529-6944d4b0371d",
+                      "admin": false,
+                      "name": "John Doe",
+                      "email": "johndoe@gmail.com",
+                      "created_at": "2022-02-22T02:28:24.097Z",
+                      "updated_at": "2022-02-22T02:28:24.097Z"
+                    },
+                    {
+                      "id": "a39312dc-8e84-4efd-b104-2612b29a1049",
+                      "admin": true,
+                      "name": "Tanjori Kamado",
+                      "email": "tanjirokamado@gmail.com",
+                      "created_at": "2022-02-22T02:29:05.205Z",
+                      "updated_at": "2022-02-22T02:29:15.872Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User doesn't have permission or not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "error": "User must be an admin!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "description": "user ID",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Show a user",
+        "description": "Show data from a specific user by the ID",
+        "operationID": "showUser",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "admin": {
+                      "type": "boolean"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "example": {
+                    "id": "cad606cf-72a1-42d6-96ea-e1fefa3865a0",
+                    "admin": false,
+                    "name": "John Doe",
+                    "email": "johndoe@gmail.com",
+                    "created_at": "2022-02-22T01:32:05.291Z",
+                    "updated_at": "2022-02-22T01:32:05.291Z"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "error": "User not found!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/admin": {
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "description": "user ID",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Make admin",
+        "description": "Turn an user into an admin",
+        "operationID": "adminUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "admin": {
+                    "type": "boolean"
+                  },
+                  "updated_at": {
+                    "type": "date-time"
+                  }
+                },
+                "example": {
+                  "admin": true,
+                  "updated_at": "2022-02-22T01:32:05.291Z"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "admin": {
+                      "type": "boolean"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "example": {
+                    "id": "cad606cf-72a1-42d6-96ea-e1fefa3865a0",
+                    "admin": true,
+                    "name": "John Doe",
+                    "email": "johndoe@gmail.com",
+                    "created_at": "2022-02-22T01:32:05.291Z",
+                    "updated_at": "2022-02-22T01:32:05.291Z"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "error": "User not found!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
